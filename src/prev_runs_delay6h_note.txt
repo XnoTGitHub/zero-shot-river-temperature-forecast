@@ -1,0 +1,15 @@
+PREVIOUS-RUNS-vs-HISTORICAL-FORECAST VERGLEICH  (dieselben 128 Fenster)
+========================================================================
+gemeinsame Fenster: 128
+  T_MAE         hist=0.3435   prev-runs=0.3500   delta=+0.0066 degC
+  A_MAE         hist=0.3499   prev-runs=0.3507   delta=+0.0009 degC
+  R_MAE         hist=0.3448   prev-runs=0.3587   delta=+0.0139 degC
+  Oraku_MAE     hist=0.4024   prev-runs=0.4024   delta=+0.0000 degC
+  AO_MAE        hist=0.3376   prev-runs=0.3387   delta=+0.0011 degC
+  RO_MAE        hist=0.3380   prev-runs=0.3441   delta=+0.0061 degC
+
+Interpretation: identische Fenster, dieselbe TiRex-Pipeline,
+einzige Aenderung: Wetter-Kovariaten aus previous_day1/day2 statt
+historical-forecast. Kleine MAE-Aenderungen sind erwartbar, weil
+die Prognose fuer den Horizont nun aus einem 24-48h aelteren
+Modelllauf stammt (leicht groessere Kovariat-Ungenauigkeit).

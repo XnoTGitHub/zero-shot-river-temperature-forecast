@@ -1,0 +1,28 @@
+# Reproduzierbarkeit: exakte Paketversionen fuer die im HyWa-Paper
+# beschriebenen Experimente (Stand August 2026).
+# Python 3.12.11 (miniforge3), CPU-only (Apple Silicon).
+# TiRex-2 Modellgewichte: NX-AI/TiRex-2 auf Hugging Face
+#   (nicht ueber pip installiert, wird von tirex-ts nachgeladen).
+#   Verwendete Revision: commit-SHA 05e5b26db52bfb256f1ae1bdf785589850482de3
+#   (Repository-Stand 2026-07-21; einzige binaere Datei: model.ckpt).
+#   Reproduktion mit exakt dieser Revision:
+#     huggingface-cli download NX-AI/TiRex-2 \
+#         --revision 05e5b26db52bfb256f1ae1bdf785589850482de3
+
+# --- Foundation-Model ---
+tirex-ts==1.4.1
+torch==2.12.0
+huggingface_hub==1.14.0
+transformers==5.8.0
+
+# --- Numerik & Statistik ---
+numpy==2.1.3
+pandas==2.3.2
+scipy==1.16.2
+
+# --- Baselines & ML ---
+xgboost==2.1.4
+darts==0.44.0
+
+# --- Plotting ---
+matplotlib==3.10.6
