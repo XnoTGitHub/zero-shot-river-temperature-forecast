@@ -1,0 +1,143 @@
+
+==============================================================================
+1  BAFU-Abfluss-Fallback
+==============================================================================
+Code (all_seasons_ensemble_prev_runs[_dst].py, one_window):
+  flow_ctx_b = df_bern['flow'].reindex(idx_ctx)...   # idx_ctx = [t0-256h, t0-1h]  -> nur Messwerte VOR t0
+  persist_flow(past) = mean(past[-24:])              # Mittel der letzten 24 Kontextstunden (t0-24h .. t0-1h)
+  bafu = fetch_oraku('flow', t0) ; None/NaN -> persist_flow(flow_ctx_b)
+  -> Fallback verwendet ausschliesslich bis t0-1h gemessene Abfluesse. [OK]
+  BAFU-Prognose: Oraku-API liefert nur Prognosen mit run_ts <= from (= t0); Erstellungszeit von BAFU selbst unbekannt (Oraku schaetzt sie).
+
+Gruppen: {'bafu': 97, 'persist': 32}
+Saisonale Zusammensetzung:
+season       Fruehling  Herbst  Sommer  Winter
+flow_source                                   
+bafu                43       0      28      26
+persist              2      14       0      16
+
+Mittlere MAE je Gruppe:
+              T_MAE   A_MAE   R_MAE  B_persist_MAE  Oraku_MAE  AO_MAE  RO_MAE
+flow_source                                                                  
+bafu         0.3910  0.3904  0.4116         0.4994     0.4550  0.3836  0.3966
+persist      0.2234  0.2220  0.2068         0.2154     0.2454  0.1993  0.1896
+
+Tests je Gruppe:
+  bafu (97)     AO-Oraku     n= 97 Δ=-0.0714 med=-0.0728 wins=77 p_wil=1.7e-08 p_sign=4.6e-09 d_z=-0.60
+  bafu (97)     T-Oraku      n= 97 Δ=-0.0640 med=-0.0716 wins=69 p_wil=0.0012 p_sign=3.8e-05 d_z=-0.29
+  bafu (97)     A-Oraku      n= 97 Δ=-0.0645 med=-0.0794 wins=69 p_wil=0.00083 p_sign=3.8e-05 d_z=-0.29
+  bafu (97)     R-B_persist  n= 97 Δ=-0.0878 med=-0.0468 wins=68 p_wil=3.5e-06 p_sign=9.3e-05 d_z=-0.38
+  bafu (97)     A-T          n= 97 Δ=-0.0006 med=+0.0005 wins=47 p_wil=0.59 p_sign=0.84 d_z=-0.01
+  bafu (97)     AO-T         n= 97 Δ=-0.0074 med=+0.0067 wins=46 p_wil=0.95 p_sign=0.68 d_z=-0.06
+  persist (32)  AO-Oraku     n= 32 Δ=-0.0461 med=-0.0668 wins=25 p_wil=0.0011 p_sign=0.0021 d_z=-0.53
+  persist (32)  T-Oraku      n= 32 Δ=-0.0220 med=-0.0576 wins=20 p_wil=0.24 p_sign=0.22 d_z=-0.14
+  persist (32)  A-Oraku      n= 32 Δ=-0.0234 med=-0.0589 wins=20 p_wil=0.15 p_sign=0.22 d_z=-0.14
+  persist (32)  R-B_persist  n= 32 Δ=-0.0086 med=-0.0142 wins=18 p_wil=0.43 p_sign=0.6 d_z=-0.12
+  persist (32)  A-T          n= 32 Δ=-0.0014 med=-0.0013 wins=19 p_wil=0.41 p_sign=0.38 d_z=-0.05
+  persist (32)  AO-T         n= 32 Δ=-0.0241 med=-0.0078 wins=18 p_wil=0.18 p_sign=0.6 d_z=-0.28
+
+Saisonbereinigter Blick (nur Winter-Fenster): A-T und AO-Oraku nach Abflussquelle
+  Winter/bafu    n=26  A-T n= 26 Δ=+0.0021 med=+0.0006 wins=11 p_wil=0.62 p_sign=0.56 d_z=+0.16
+  Winter/bafu    n=26  AO-Oraku n= 26 Δ=-0.0359 med=-0.0389 wins=21 p_wil=0.0012 p_sign=0.0025 d_z=-0.60
+  Winter/persist n=16  A-T n= 16 Δ=+0.0055 med=+0.0012 wins=7 p_wil=0.38 p_sign=0.8 d_z=+0.18
+  Winter/persist n=16  AO-Oraku n= 16 Δ=-0.0438 med=-0.0641 wins=14 p_wil=0.018 p_sign=0.0042 d_z=-0.45
+
+Abflussprognose-Guete (97 BAFU-Fenster): MAE BAFU-Prognose vs. 24-h-Persistenz gegen gemessenen Abfluss [m3/s]
+  n=97  MAE BAFU=10.0  MAE Persistenz=9.0  mittlerer Abfluss=99  BAFU besser in 38 Fenstern, Wilcoxon p=0.046
+
+==============================================================================
+2  Interpolation im Eingabekontext (alle 129 Fenster)
+==============================================================================
+bern_temp : Fenster mit interpolierten Kontextstunden= 35  Summe Stunden=  50  max zusammenhaengende Luecke=4 h  (Fenster 2026-05-13, Ende 1..252 h vor t0)
+bern_flow : Fenster mit interpolierten Kontextstunden= 35  Summe Stunden=  50  max zusammenhaengende Luecke=4 h  (Fenster 2026-05-13, Ende 1..252 h vor t0)
+thun_temp : Fenster mit interpolierten Kontextstunden= 35  Summe Stunden=  50  max zusammenhaengende Luecke=4 h  (Fenster 2026-05-13, Ende 1..252 h vor t0)
+thun_flow : Fenster mit interpolierten Kontextstunden= 35  Summe Stunden=  50  max zusammenhaengende Luecke=4 h  (Fenster 2026-05-13, Ende 1..252 h vor t0)
+Bewertungszeitraum: Fenster mit fehlenden Bern-Messstunden = 0 (muss 0 sein); Thun-Messwerte im Horizont fehlend (nur Stufe-1-Bewertung betroffen) = 0 Fenster
+Open-Meteo-Kovariaten: Rohcache ohne NaN (siehe Dry-Run Kap. 3.1); interpolate(limit=12) greift nicht.
+
+Fenster mit Kontextluecke > 6 h in irgendeiner Messreihe: 0
+Fenster mit interpolierter Bern-Temperatur in den letzten 24 h vor t0: 5  2025-12-10 (1 h, Ende 12 h vor t0), 2026-01-25 (1 h, Ende 7 h vor t0), 2026-02-22 (1 h, Ende 1 h vor t0), 2026-06-10 (1 h, Ende 1 h vor t0), 2026-06-30 (1 h, Ende 3 h vor t0)
+
+Sensitivitaet ohne alle 35 Fenster mit irgendeiner Kontext-Interpolation (n=94):
+  AO-Oraku     n= 94 Δ=-0.0618 med=-0.0720 wins=71 p_wil=4.3e-07 p_sign=7.3e-07 d_z=-0.52
+  T-Oraku      n= 94 Δ=-0.0482 med=-0.0657 wins=63 p_wil=0.014 p_sign=0.0013 d_z=-0.22
+  R-B_persist  n= 94 Δ=-0.0585 med=-0.0228 wins=58 p_wil=0.0018 p_sign=0.03 d_z=-0.28
+  AO-T         n= 94 Δ=-0.0136 med=-0.0063 wins=50 p_wil=0.37 p_sign=0.61 d_z=-0.11
+Sensitivitaet ohne die 5 Fenster mit Interpolation in den letzten 24 h vor t0 (n=124):
+  AO-Oraku     n=124 Δ=-0.0668 med=-0.0720 wins=99 p_wil=8.7e-11 p_sign=1.3e-11 d_z=-0.60
+  T-Oraku      n=124 Δ=-0.0555 med=-0.0711 wins=86 p_wil=0.00062 p_sign=1.9e-05 d_z=-0.27
+
+Informationen nach t0: Kontext endet t0-1h; Open-Meteo day1/day2 = Laeufe initialisiert >=24 h vor Gueltigkeit (< t0); Oraku last_updated < t0 (alle 129); BAFU-Abfluss via Oraku run_ts <= t0; Klimatologie 2020-2022; Persistenz = Wert t0-1h. [OK]
+
+==============================================================================
+3a  Statistik: Aussage <-> passender Test (dst_n129)
+==============================================================================
+R vs Oraku: Mittelwert -0.0422 (t-Test p=0.090; MBB-CI ueberstreicht 0) | Median -0.0544, Vorzeichentest p=1.9e-04, Wilcoxon p=2.0e-04, Schiefe +2.37
+  -> zulaessige Aussage: 'R ist in 86/129 Fenstern besser als Oraku (Median -0,054 degC); der mittlere MAE-Unterschied ist wegen weniger grosser Ausreisser nicht gesichert.'
+AO (6h-Delay) vs Oraku: Δ=+0.0346 CI95=[+0.0104,+0.0604] Wilcoxon p=0.092 TOST(+-0.05) p=0.111 -> KEINE Aequivalenz belegt; Nicht-Signifikanz ist kein Beleg
+RO (6h-Delay) vs Oraku: Δ=+0.0103 CI95=[-0.0162,+0.0386] Wilcoxon p=0.622 TOST(+-0.05) p=0.003 -> Aequivalenz innerhalb +-0.05 belegt
+  -> AO: 'im Mittel um 0,035 degC schlechter als Oraku (CI schliesst 0 aus)'; RO: 'aequivalent innerhalb +-0,05 degC'.
+
+==============================================================================
+3b  Oraku-Modellversion je Fenster (model_info-Abfrage, horizon=1)
+==============================================================================
+Prognosezeitpunkte: t0 - last_updated [min]: min 14, median 15, max 464; nach t0: 0
+Versionen (Fensterzahl, Zeitraum):
+  LR/dev                 n= 67  2025-11-04 .. 2026-03-22  Saisons={'Winter': 42, 'Herbst': 14, 'Fruehling': 11}
+  nowcasting_temp/1.0    n= 25  2026-03-24 .. 2026-05-13  Saisons={'Fruehling': 25}
+  nowcasting_temp/1.1    n=  1  2026-05-15 .. 2026-05-15  Saisons={'Fruehling': 1}
+  nowcasting_temp/1.2    n=  1  2026-05-17 .. 2026-05-17  Saisons={'Fruehling': 1}
+  nowcasting_temp/1.3    n= 35  2026-05-19 .. 2026-07-30  Saisons={'Sommer': 28, 'Fruehling': 7}
+
+Oraku-MAE und TiRex-Vorteil je Version:
+  LR/dev                 Oraku=0.249 T=0.214 AO=0.202  T-Oraku n= 67 Δ=-0.0354 med=-0.0511 wins=48 p_wil=0.0054 p_sign=0.00052 d_z=-0.25
+                         AO-Oraku n= 67 Δ=-0.0468 med=-0.0593 wins=54 p_wil=1e-06 p_sign=4.5e-07 d_z=-0.62
+  nowcasting_temp/1.0    Oraku=0.612 T=0.478 AO=0.496  T-Oraku n= 25 Δ=-0.1334 med=-0.1240 wins=20 p_wil=0.0081 p_sign=0.0041 d_z=-0.61
+                         AO-Oraku n= 25 Δ=-0.1162 med=-0.1012 wins=24 p_wil=1.2e-05 p_sign=1.5e-06 d_z=-1.08
+  nowcasting_temp/1.1    Oraku=0.306 T=0.554 AO=0.307  T-Oraku n=  1 Δ=+0.2487 med=+0.2487 wins=0 p_wil=nan p_sign=1 d_z=+nan
+                         AO-Oraku n=  1 Δ=+0.0012 med=+0.0012 wins=0 p_wil=nan p_sign=1 d_z=+nan
+  nowcasting_temp/1.2    Oraku=0.747 T=0.159 AO=0.338  T-Oraku n=  1 Δ=-0.5880 med=-0.5880 wins=1 p_wil=nan p_sign=1 d_z=+nan
+                         AO-Oraku n=  1 Δ=-0.4088 med=-0.4088 wins=1 p_wil=nan p_sign=1 d_z=+nan
+  nowcasting_temp/1.3    Oraku=0.542 T=0.517 AO=0.486  T-Oraku n= 35 Δ=-0.0245 med=-0.0634 wins=20 p_wil=0.46 p_sign=0.5 d_z=-0.09
+                         AO-Oraku n= 35 Δ=-0.0557 med=-0.0802 wins=23 p_wil=0.017 p_sign=0.09 d_z=-0.38
+
+Fruehling nach Version (gleiche Saison, Versionswechsel):
+  LR/dev                 n=11 Oraku=0.391 T=0.251 Δ(T-Oraku)=-0.141
+  nowcasting_temp/1.0    n=25 Oraku=0.612 T=0.478 Δ(T-Oraku)=-0.133
+  nowcasting_temp/1.1    n= 1 Oraku=0.306 T=0.554 Δ(T-Oraku)=+0.249
+  nowcasting_temp/1.2    n= 1 Oraku=0.747 T=0.159 Δ(T-Oraku)=-0.588
+  nowcasting_temp/1.3    n= 7 Oraku=0.724 T=0.736 Δ(T-Oraku)=+0.012
+
+==============================================================================
+3c  Modellauswahl auf Testdaten: Sensitivitaet (dst_n129)
+==============================================================================
+ohne 7 Subset-Fenster (13.-27.07.) (n=122):
+  AO-Oraku     n=122 Δ=-0.0640 med=-0.0717 wins=98 p_wil=1.9e-10 p_sign=8.3e-12 d_z=-0.58
+  T-Oraku      n=122 Δ=-0.0563 med=-0.0682 wins=85 p_wil=0.00037 p_sign=1.6e-05 d_z=-0.27
+  R-B_persist  n=122 Δ=-0.0622 med=-0.0288 wins=81 p_wil=1.5e-05 p_sign=0.00037 d_z=-0.31
+  R-T          n=122 Δ=+0.0146 med=+0.0039 wins=57 p_wil=0.52 p_sign=0.53 d_z=+0.06
+  AO-T         n=122 Δ=-0.0077 med=+0.0071 wins=58 p_wil=0.81 p_sign=0.65 d_z=-0.07
+ohne Juli 2026 (n=114):
+  AO-Oraku     n=114 Δ=-0.0589 med=-0.0717 wins=90 p_wil=3.9e-09 p_sign=3.6e-10 d_z=-0.54
+  T-Oraku      n=114 Δ=-0.0487 med=-0.0682 wins=79 p_wil=0.0013 p_sign=4.6e-05 d_z=-0.24
+  R-B_persist  n=114 Δ=-0.0521 med=-0.0262 wins=74 p_wil=0.00012 p_sign=0.0019 d_z=-0.27
+  R-T          n=114 Δ=-0.0005 med=+0.0036 wins=54 p_wil=0.77 p_sign=0.64 d_z=-0.00
+  AO-T         n=114 Δ=-0.0102 med=+0.0071 wins=54 p_wil=0.68 p_sign=0.64 d_z=-0.09
+ohne Juni+Juli 2026 (n=101):
+  AO-Oraku     n=101 Δ=-0.0643 med=-0.0713 wins=83 p_wil=8.8e-10 p_sign=3.7e-11 d_z=-0.64
+  T-Oraku      n=101 Δ=-0.0591 med=-0.0716 wins=73 p_wil=0.00029 p_sign=8.6e-06 d_z=-0.32
+  R-B_persist  n=101 Δ=-0.0344 med=-0.0196 wins=63 p_wil=0.0024 p_sign=0.017 d_z=-0.20
+  R-T          n=101 Δ=+0.0164 med=+0.0040 wins=46 p_wil=0.36 p_sign=0.43 d_z=+0.07
+  AO-T         n=101 Δ=-0.0052 med=+0.0084 wins=46 p_wil=0.87 p_sign=0.43 d_z=-0.05
+
+==============================================================================
+3d  DST-Ueberlappung 28./30.03.: Abdeckung durch n=128/n=129
+==============================================================================
+n=129 (beide Fenster): AO-Oraku n=129 Δ=-0.0651 med=-0.0720 wins=102 p_wil=1.2e-10 p_sign=1.9e-11 d_z=-0.58
+                       T-Oraku  n=129 Δ=-0.0536 med=-0.0705 wins=89 p_wil=0.00062 p_sign=1.9e-05 d_z=-0.26
+n=128 ohne 28.03.: AO-Oraku n=128 Δ=-0.0641 med=-0.0717 wins=101 p_wil=1.8e-10 p_sign=3e-11 d_z=-0.57
+                       T-Oraku  n=128 Δ=-0.0519 med=-0.0682 wins=88 p_wil=0.00089 p_sign=2.7e-05 d_z=-0.25
+n=128 ohne 30.03.: AO-Oraku n=128 Δ=-0.0655 med=-0.0720 wins=101 p_wil=1.4e-10 p_sign=3e-11 d_z=-0.58
+                       T-Oraku  n=128 Δ=-0.0557 med=-0.0711 wins=89 p_wil=0.00035 p_sign=1.2e-05 d_z=-0.27
+Gemeinsame Messzeitpunkte beider Fenster in der Stundendatei: 1 (['2026-03-30T00:00:00+02:00'])
+Fenster-MAE-Differenzen der beiden Fenster (AO-Oraku): 2026-03-28 -0.195, 2026-03-30 -0.007

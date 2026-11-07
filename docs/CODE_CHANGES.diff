@@ -1,0 +1,374 @@
+# Hinweis: <ARBEITSVERZEICHNIS> steht fuer das lokale Arbeitsverzeichnis des Autors.
+--- review_runde1/frozen_2026-10-14/scripts/dst_relabel.py
++++ scripts/dst_relabel.py
+@@ -1,3 +1,5 @@
++# [Repositorium v1.1.0] Inhalt unveraendert aus review_runde1/frozen_2026-10-14/scripts/dst_relabel.py;
++# angepasst sind nur Pfade (scripts/paths.py). Diff: docs/CODE_CHANGES.diff
+ """DST-korrekte Rekonstruktion der Zeitstempel gecachter Open-Meteo-Antworten.
+ 
+ Hintergrund
+--- review_runde1/frozen_2026-10-14/scripts/test_dst_relabel.py
++++ scripts/test_dst_relabel.py
+@@ -1,3 +1,5 @@
++# [Repositorium v1.1.0] Inhalt unveraendert aus review_runde1/frozen_2026-10-14/scripts/test_dst_relabel.py;
++# angepasst sind nur Pfade (scripts/paths.py). Diff: docs/CODE_CHANGES.diff
+ """Netzwerkfreie Tests fuer dst_relabel (synthetische + echte Cache-Daten).
+ 
+ Aufruf:  python3 -I test_dst_relabel.py     (oder pytest)
+@@ -16,7 +18,8 @@
+ from dst_relabel import (TZ, hourly_frame_raw, reconstruct_utc, utc_to_local_aware,  # noqa: E402
+                          local_aware_to_naive_pipeline, relabel_open_meteo, label_shift_hours)
+ 
+-CACHE = Path("<ARBEITSVERZEICHNIS>/aare_dashboard_cache")
++sys.path.insert(0, str(Path(__file__).resolve().parent))
++from paths import CACHE  # noqa: E402
+ PRIMARY = CACHE / "meteo_prevruns_tt_solar_bern_2025-10-23_2026-08-04.json"
+ 
+ 
+--- review_runde1/frozen_2026-10-14/scripts/all_seasons_ensemble_prev_runs_dst.py
++++ scripts/all_seasons_ensemble_prev_runs_dst.py
+@@ -1,3 +1,5 @@
++# [Repositorium v1.1.0] Inhalt unveraendert aus review_runde1/frozen_2026-10-14/scripts/all_seasons_ensemble_prev_runs_dst.py;
++# angepasst sind nur Pfade (scripts/paths.py) und die feste TiRex-2-Revision mit Pruefsummenkontrolle. Diff: docs/CODE_CHANGES.diff
+ """DST-korrigierter Neulauf des 128/129-Fenster-Primaertests (Previous Runs API).
+ 
+ Kopie von paper_hywa/src/all_seasons_ensemble_prev_runs.py mit genau diesen
+@@ -29,15 +31,12 @@
+ from tirex2.model.types import TimeseriesType
+ 
+ HERE = Path(__file__).resolve().parent
+-sys.path.insert(0, str(HERE.parent / "dst_fix"))
++sys.path.insert(0, str(HERE))
+ from dst_relabel import relabel_open_meteo  # noqa: E402
+ 
+-BASE = Path("<ARBEITSVERZEICHNIS>")
+-CACHE_DIR = BASE / "aare_dashboard_cache"          # NUR LESEN
+-CACHE_NEW = HERE / "cache_new"                     # neue Abrufe
+-RESULTS = HERE / "results"
+-CACHE_NEW.mkdir(exist_ok=True)
+-RESULTS.mkdir(exist_ok=True)
++from paths import CACHE as CACHE_DIR, CACHE_NEW, RESULTS, CLIMATOLOGY, verify_tirex2_checkpoint  # noqa: E402
++CACHE_NEW.mkdir(parents=True, exist_ok=True)
++RESULTS.mkdir(parents=True, exist_ok=True)
+ 
+ TZ = "Europe/Zurich"
+ LAT_BERN, LON_BERN = 46.948, 7.447
+@@ -177,7 +176,7 @@
+     global _TIREX2
+     if _TIREX2 is None:
+         print("  loading TiRex-2 ...", flush=True)
+-        _TIREX2 = load_v2("NX-AI/TiRex-2", device="cpu")
++        _TIREX2 = load_v2(verify_tirex2_checkpoint(), device="cpu")  # Revision 05e5b26 (paths.py)
+     return _TIREX2
+ 
+ 
+@@ -199,7 +198,7 @@
+ 
+ 
+ def load_climatology():
+-    df = pd.read_csv(BASE / "aare_temperature_hourly.csv", parse_dates=["datetime"])
++    df = pd.read_csv(CLIMATOLOGY, parse_dates=["datetime"])
+     df = df[df["datetime"] < "2023-01-01"].copy()
+     df["doy"] = df["datetime"].dt.dayofyear
+     df["hour"] = df["datetime"].dt.hour
+--- review_runde1/frozen_2026-10-14/scripts/delay6h_prev_runs_dst.py
++++ scripts/delay6h_prev_runs_dst.py
+@@ -1,3 +1,5 @@
++# [Repositorium v1.1.0] Inhalt unveraendert aus review_runde1/frozen_2026-10-14/scripts/delay6h_prev_runs_dst.py;
++# angepasst sind nur Pfade (scripts/paths.py). Diff: docs/CODE_CHANGES.diff
+ """6-h-Delay-Sensitivitaet auf DST-korrigierter, tz-aware Basis.
+ 
+ Kopie von paper_hywa/src/delay6h_prev_runs.py; importiert alle Loader/Modelle
+--- review_runde1/frozen_2026-10-14/scripts/all_seasons_ensemble_hist_dst.py
++++ scripts/all_seasons_ensemble_hist_dst.py
+@@ -1,3 +1,5 @@
++# [Repositorium v1.1.0] Inhalt unveraendert aus review_runde1/frozen_2026-10-14/scripts/all_seasons_ensemble_hist_dst.py;
++# angepasst sind nur Pfade (scripts/paths.py). Diff: docs/CODE_CHANGES.diff
+ """Historical-Forecast-Vergleich auf DST-korrigierter, tz-aware Basis.
+ 
+ Kopie von paper_hywa/src/all_seasons_ensemble.py (Kovariaten aus der
+@@ -17,7 +19,6 @@
+ 
+ HERE = Path(__file__).resolve().parent
+ sys.path.insert(0, str(HERE))
+-sys.path.insert(0, str(HERE.parent / "dst_fix"))
+ from dst_relabel import relabel_open_meteo  # noqa: E402
+ from all_seasons_ensemble_prev_runs_dst import (  # noqa: E402
+     TZ, fetch_aare_city_chunked, fetch_oraku, forecast_tirex2, wind_alongshore, mae,
+--- review_runde1/frozen_2026-10-14/scripts/prev_runs_stats_dst.py
++++ scripts/prev_runs_stats_dst.py
+@@ -1,3 +1,5 @@
++# [Repositorium v1.1.0] Inhalt unveraendert aus review_runde1/frozen_2026-10-14/scripts/prev_runs_stats_dst.py;
++# angepasst sind nur Pfade (scripts/paths.py). Diff: docs/CODE_CHANGES.diff
+ """Vollstaendige statistische Auswertung des strikt-kausalen Primaertests
+ (Previous Runs API). Konsolidiert die Logik aus:
+   all_seasons_stats.py, session18_holm.py, reviewer_robustness.py,
+@@ -23,13 +25,12 @@
+ import pandas as pd
+ from scipy import stats
+ 
+-BASE = Path("<ARBEITSVERZEICHNIS>")
+-SRC = BASE / "paper_hywa/src"
+ 
+ import sys
+ TAG = sys.argv[1] if len(sys.argv) > 1 else "dst"
+ SUBSET = sys.argv[2] if len(sys.argv) > 2 else ""
+-RES = Path(__file__).resolve().parent / "results"
++sys.path.insert(0, str(Path(__file__).resolve().parent))
++from paths import RESULTS as RES  # noqa: E402
+ SUMMARY = RES / f"all_seasons_prev_runs_{TAG}_summary.csv"
+ HOURLY = RES / f"all_seasons_prev_runs_{TAG}_hourly.csv"
+ OUT = RES / f"stats_{TAG}{SUBSET}"
+--- review_runde1/frozen_2026-10-14/scripts/final_checks.py
++++ scripts/final_checks.py
+@@ -1,3 +1,5 @@
++# [Repositorium v1.1.0] Inhalt unveraendert aus review_runde1/frozen_2026-10-14/scripts/final_checks.py;
++# angepasst sind nur Pfade (scripts/paths.py). Diff: docs/CODE_CHANGES.diff
+ """Abschliessende methodische Pruefung (Phase 1d) auf dem DST-korrigierten Datensatz (n=129).
+ 
+ Liest: rerun_dst/results/*.csv, Original-Caches (nur lesen), Oraku-API (model_info, horizon=1)
+@@ -17,11 +19,10 @@
+ from scipy import stats
+ 
+ HERE = Path(__file__).resolve().parent
+-RR = HERE.parent / "rerun_dst" / "results"
+-CACHE = Path("<ARBEITSVERZEICHNIS>/aare_dashboard_cache")
+-CACHE_NEW = HERE.parent / "rerun_dst" / "cache_new"
+-META = HERE / "cache_oraku_meta"
+-META.mkdir(exist_ok=True)
++sys.path.insert(0, str(HERE))
++from paths import RESULTS as RR, CACHE, CACHE_NEW, ORAKU_META as META, FINAL  # noqa: E402
++META.mkdir(parents=True, exist_ok=True)
++FINAL.mkdir(parents=True, exist_ok=True)
+ TZ = "Europe/Zurich"
+ CONTEXT, HORIZON = 256, 48
+ SEASON = {12: "Winter", 1: "Winter", 2: "Winter", 3: "Fruehling", 4: "Fruehling", 5: "Fruehling",
+@@ -118,7 +119,7 @@
+ P(f"  n={len(fq)}  MAE BAFU={fq.mae_bafu.mean():.1f}  MAE Persistenz={fq.mae_persist.mean():.1f}  mittlerer Abfluss={fq.flow_mean.mean():.0f}  "
+   f"BAFU besser in {(fq.mae_bafu < fq.mae_persist).sum()} Fenstern, Wilcoxon p={stats.wilcoxon(fq.mae_bafu - fq.mae_persist).pvalue:.2g}")
+ out["flow_quality"] = fq.to_dict("records")
+-fq.to_csv(HERE / "flow_forecast_quality.csv", index=False)
++fq.to_csv(FINAL / "flow_forecast_quality.csv", index=False)
+ 
+ # =============================================================================
+ sec("2  Interpolation im Eingabekontext (alle 129 Fenster)")
+@@ -141,7 +142,7 @@
+     r["eval_truth_nan"] = int(bern.temperature.reindex(idx_fc).isna().sum())
+     r["eval_thun_nan"] = int(thun.temperature.reindex(idx_fc).isna().sum())
+     rows.append(r)
+-gi = pd.DataFrame(rows); gi.to_csv(HERE / "context_gaps.csv", index=False)
++gi = pd.DataFrame(rows); gi.to_csv(FINAL / "context_gaps.csv", index=False)
+ for name in ["bern_temp", "bern_flow", "thun_temp", "thun_flow"]:
+     nz = gi[gi[f"{name}_nan"] > 0]
+     P(f"{name:10s}: Fenster mit interpolierten Kontextstunden={len(nz):3d}  Summe Stunden={int(gi[f'{name}_nan'].sum()):4d}  "
+@@ -205,7 +206,7 @@
+     m = json.loads(fp.read_text()).get("metadata") or {}
+     mdl = m.get("model") or {}
+     rows.append({"t0": t0, "model": f"{mdl.get('name')}/{mdl.get('version')}", "last_updated": m.get("last_updated")})
+-mv = pd.DataFrame(rows); mv.to_csv(HERE / "oraku_model_versions.csv", index=False)
++mv = pd.DataFrame(rows); mv.to_csv(FINAL / "oraku_model_versions.csv", index=False)
+ lu = pd.to_datetime(mv.last_updated, utc=True).dt.tz_convert(TZ)
+ lead = (mv.t0.dt.tz_localize(TZ) - lu).dt.total_seconds() / 60
+ P(f"Prognosezeitpunkte: t0 - last_updated [min]: min {lead.min():.0f}, median {lead.median():.0f}, max {lead.max():.0f}; nach t0: {(lead<0).sum()}")
+@@ -244,6 +245,6 @@
+ P(f"Gemeinsame Messzeitpunkte beider Fenster in der Stundendatei: {len(shared)} ({list(shared.index)})")
+ P("Fenster-MAE-Differenzen der beiden Fenster (AO-Oraku): " + ", ".join(f"{r.t0.date()} {r.AO_MAE - r.Oraku_MAE:+.3f}" for r in s[s.t0.isin(['2026-03-28', '2026-03-30'])].itertuples()))
+ 
+-(HERE / "final_checks.log").write_text("\n".join(lines))
+-json.dump(out, open(HERE / "final_checks.json", "w"), default=str, indent=1)
++(FINAL / "final_checks.log").write_text("\n".join(lines))
++json.dump(out, open(FINAL / "final_checks.json", "w"), default=str, indent=1)
+ print("\n-> final_audit/final_checks.log")
+--- review_runde1/frozen_2026-10-14/scripts/compare_results.py
++++ scripts/compare_results.py
+@@ -1,3 +1,5 @@
++# [Repositorium v1.1.0] Inhalt unveraendert aus review_runde1/frozen_2026-10-14/scripts/compare_results.py;
++# angepasst sind nur Pfade (scripts/paths.py). Diff: docs/CODE_CHANGES.diff
+ """Vergleich Original (n=128) vs. DST-korrigiert (n=128, gleiche Fenster) vs. korrigiert inkl. 28.03. (n=129).
+ 
+ Liest: paper_hywa/src/*.csv (Original), results/*.csv (neu), results/stats_*/ (neue Statistik).
+@@ -13,8 +15,8 @@
+ from scipy import stats
+ 
+ HERE = Path(__file__).resolve().parent
+-RES = HERE / "results"
+-SRC = Path("<ARBEITSVERZEICHNIS>/paper_hywa/src")
++import sys; sys.path.insert(0, str(HERE))
++from paths import RESULTS as RES, V100_REFERENCE as SRC  # noqa: E402
+ TZ = "Europe/Zurich"
+ MODELS = ["T_MAE", "A_MAE", "R_MAE", "B_persist_MAE", "Oraku_MAE", "AO_MAE", "RO_MAE", "persistence_MAE", "climatology_MAE"]
+ PRIMARY = [("Q1 T vs Oraku", "T_MAE", "Oraku_MAE"), ("Q2a R vs B_persist", "R_MAE", "B_persist_MAE"),
+--- review_runde1/phase2a/metrics_hydro.py
++++ scripts/metrics_hydro.py
+@@ -1,3 +1,5 @@
++# [Repositorium v1.1.0] Inhalt unveraendert aus review_runde1/phase2a/metrics_hydro.py;
++# angepasst sind nur Pfade (scripts/paths.py). Diff: docs/CODE_CHANGES.diff
+ """Z1 – Hydrologische Kennzahlen aus dem eingefrorenen Datensatz (n = 129).
+ 
+ Liest ausschliesslich review_runde1/frozen_2026-10-14/results/.
+@@ -20,9 +22,9 @@
+ from scipy import stats
+ 
+ HERE = Path(__file__).resolve().parent
+-FROZEN = HERE.parent / "frozen_2026-10-14" / "results"
+-OUT = HERE / "tables"
+-OUT.mkdir(exist_ok=True)
++import sys; sys.path.insert(0, str(HERE))
++from paths import RESULTS as FROZEN, TABLES as OUT  # noqa: E402
++OUT.mkdir(parents=True, exist_ok=True)
+ TZ = "Europe/Zurich"
+ SEASON = {12: "Winter", 1: "Winter", 2: "Winter", 3: "Fruehling", 4: "Fruehling", 5: "Fruehling",
+           6: "Sommer", 7: "Sommer", 8: "Sommer", 9: "Herbst", 10: "Herbst", 11: "Herbst"}
+--- review_runde1/phase2a/controls_phase2a.py
++++ scripts/controls_phase2a.py
+@@ -1,3 +1,5 @@
++# [Repositorium v1.1.0] Inhalt unveraendert aus review_runde1/phase2a/controls_phase2a.py;
++# angepasst sind nur Pfade (scripts/paths.py). Diff: docs/CODE_CHANGES.diff
+ """Gezielte Kontrollen zum Abschluss von Phase 2a (nur eingefrorene Daten, keine Modellläufe).
+ 
+ 1. Stabilität der Kennzahl "Zeitpunkt des Tagesmaximums": Amplitude, Mehrfachmaxima,
+@@ -16,8 +18,8 @@
+ from scipy import stats
+ 
+ HERE = Path(__file__).resolve().parent
+-FROZEN = HERE.parent / "frozen_2026-10-14" / "results"
+-TAB = HERE / "tables"
++import sys; sys.path.insert(0, str(HERE))
++from paths import RESULTS as FROZEN, TABLES as TAB  # noqa: E402
+ TZ = "Europe/Zurich"
+ SEASON = {12: "Winter", 1: "Winter", 2: "Winter", 3: "Fruehling", 4: "Fruehling", 5: "Fruehling",
+           6: "Sommer", 7: "Sommer", 8: "Sommer", 9: "Herbst", 10: "Herbst", 11: "Herbst"}
+--- review_runde1/phase2b/fig_karte.py
++++ scripts/fig_karte.py
+@@ -1,3 +1,5 @@
++# [Repositorium v1.1.0] Inhalt unveraendert aus review_runde1/phase2b/fig_karte.py;
++# angepasst sind nur Pfade (scripts/paths.py). Diff: docs/CODE_CHANGES.diff
+ """Abb. 1 (neu): Karte des Untersuchungsgebiets aus OpenStreetMap-Geometrie (Nominatim, ODbL)
+ und BAFU-Stationskoordinaten (LV95, hydrodaten.admin.ch). Keine Kacheln, keine externen Bilder.
+ Ausgabe: phase2b/figures_v3/abb01_karte.png/.pdf (Layout-Runde 3; Vorfassung: phase2b/figures/), phase2b/geo/karte_log.txt
+@@ -12,7 +14,9 @@
+ import numpy as np
+ 
+ HERE = Path(__file__).resolve().parent
+-GEO = HERE / "geo"; FIG = HERE / "figures"; FIG.mkdir(exist_ok=True)
++import sys; sys.path.insert(0, str(HERE))
++from paths import OSM as GEO, FIGURES as FIG  # noqa: E402
++FIG.mkdir(parents=True, exist_ok=True)
+ plt.rcParams.update({"font.size": 9, "font.family": "DejaVu Sans"})
+ CM = 1 / 2.54
+ 
+@@ -147,6 +151,6 @@
+ item(0.28, river_sym, "Aare Thun → Bern", f"Fließstrecke ≈ {river_km:.0f} km\n(Luftlinie 22,5 km)")
+ fig.text(0.995, 0.008, "Gewässer: © OpenStreetMap-Mitwirkende (ODbL), Geometrie vereinfacht;\nStationskoordinaten: BAFU, hydrodaten.admin.ch",
+          ha="right", va="bottom", fontsize=6.5, color="#6b7280", linespacing=1.25)
+-OUT = HERE / "figures_v3"; OUT.mkdir(exist_ok=True)
++OUT = FIG
+ fig.savefig(OUT / "abb01_karte.png", dpi=600); fig.savefig(OUT / "abb01_karte.pdf")
+-(GEO / "karte_log.txt").write_text("\n".join(log)); print("\n".join(log)); print("->", OUT / "abb01_karte.png")
++(FIG / "abb01_karte_log.txt").write_text("\n".join(log)); print("\n".join(log)); print("->", OUT / "abb01_karte.png")
+--- review_runde1/phase2b/fig_prognoseaufbau.py
++++ scripts/fig_prognoseaufbau.py
+@@ -1,3 +1,5 @@
++# [Repositorium v1.1.0] Inhalt unveraendert aus review_runde1/phase2b/fig_prognoseaufbau.py;
++# angepasst sind nur Pfade (scripts/paths.py). Diff: docs/CODE_CHANGES.diff
+ """Abb. 2 (neu, v2): Prognoseaufbau und Modelle mit getrennten Eingängen.
+ Ausgabe: phase2b/figures_v3/abb02_prognoseaufbau.png/.pdf (Layout-Runde 3; Vorfassung: phase2b/figures/)
+ """
+@@ -9,8 +11,10 @@
+ from matplotlib.patches import FancyBboxPatch, FancyArrowPatch, Rectangle
+ 
+ HERE = Path(__file__).resolve().parent
+-FIG = HERE / "figures"; FIG.mkdir(exist_ok=True)
+-OUTDIR = HERE / "figures_v3"; OUTDIR.mkdir(exist_ok=True)
++import sys; sys.path.insert(0, str(HERE))
++from paths import FIGURES as FIG  # noqa: E402
++FIG.mkdir(parents=True, exist_ok=True)
++OUTDIR = FIG
+ plt.rcParams.update({"font.size": 9, "font.family": "DejaVu Sans"})
+ CM = 1 / 2.54
+ C_CTX, C_FC1, C_FC2, C_OBS = "#cfe3f3", "#f7d7c4", "#f3c2a6", "#d9d9d9"
+--- review_runde1/phase2b/fig_hydro_v3.py
++++ scripts/fig_hydro_v3.py
+@@ -1,3 +1,5 @@
++# [Repositorium v1.1.0] Inhalt unveraendert aus review_runde1/phase2b/fig_hydro_v3.py;
++# angepasst sind nur Pfade (scripts/paths.py). Diff: docs/CODE_CHANGES.diff
+ """Layout-Runde 3 (22.10.2026): Abb. 3, 4 und 5 des Manuskripts, neu gesetzt.
+ 
+ Abgeleitet aus phase2a/figures_hydro.py (Abb. A, B, F); Daten, Fallauswahl, Kurven und MAE-Formel
+@@ -29,9 +31,9 @@
+ from matplotlib.ticker import ScalarFormatter
+ 
+ HERE = Path(__file__).resolve().parent
+-FROZEN = HERE.parent / "frozen_2026-10-14" / "results"
+-TAB = HERE.parent / "phase2a" / "tables"
+-OUT = HERE / "figures_v3"; OUT.mkdir(exist_ok=True)
++import sys; sys.path.insert(0, str(HERE))
++from paths import RESULTS as FROZEN, TABLES as TAB, FIGURES as OUT  # noqa: E402
++OUT.mkdir(parents=True, exist_ok=True)
+ TZ = "Europe/Zurich"
+ SEASON = {12: "Winter", 1: "Winter", 2: "Winter", 3: "Fruehling", 4: "Fruehling", 5: "Fruehling",
+           6: "Sommer", 7: "Sommer", 8: "Sommer", 9: "Herbst", 10: "Herbst", 11: "Herbst"}
+--- review_runde1/phase2b/fig_ranking_saison.py
++++ scripts/fig_ranking_saison.py
+@@ -1,13 +1,18 @@
++# [Repositorium v1.1.0] Inhalt unveraendert aus review_runde1/phase2b/fig_ranking_saison.py;
++# angepasst sind nur Pfade (scripts/paths.py). Diff: docs/CODE_CHANGES.diff
+ """Abb. Ranking (n=129, Bootstrap-CI) und Saison-Boxplot aus dem eingefrorenen Stand."""
+ from pathlib import Path
+ import matplotlib; matplotlib.use("Agg")
+ import matplotlib.pyplot as plt, pandas as pd, numpy as np
+-HERE=Path(__file__).resolve().parent; FR=HERE.parent/"frozen_2026-10-14"/"results"; FIG=HERE/"figures"
++HERE=Path(__file__).resolve().parent
++import sys; sys.path.insert(0, str(HERE))
++from paths import RESULTS as FR, FIGURES as FIG  # noqa: E402
++FIG.mkdir(parents=True, exist_ok=True)
+ plt.rcParams.update({"font.size":9.5,"axes.grid":True,"grid.color":"#e3e6ea","grid.linewidth":0.6,"axes.spines.top":False,"axes.spines.right":False,"savefig.dpi":600})
+ CM=1/2.54; W=16*CM
+ NAME={"AO":"Ensemble ½·LAW + ½·Oraku","RO":"Ensemble ½·R + ½·Oraku","A":"TiRex-2 (Lufttemp., Abfluss, Wind) – LAW","T":"TiRex-2 (Lufttemperatur) – L","R":"TiRex-2 (zweistufig) – R","Oraku":"Aare-Oraku (Referenz)","B_persist":"TiRex-2 (zweistufig, Thun-Persistenz)","persistence":"Persistenz","climatology":"Klimatologie"}
+ COL={"AO":"#CC3311","RO":"#CC3311","A":"#009E73","T":"#0072B2","R":"#0072B2","Oraku":"#D55E00","B_persist":"#0072B2","persistence":"#6b7280","climatology":"#6b7280"}
+-r=pd.read_csv(FR/"stats_n129"/"prev_runs_ranking.csv").sort_values("MAE",ascending=False)
++r=pd.read_csv(FR/"stats_dst"/"prev_runs_ranking.csv").sort_values("MAE",ascending=False)
+ fig,ax=plt.subplots(figsize=(W,7.5*CM))
+ y=np.arange(len(r))
+ ax.barh(y,r.MAE,color=[COL[m] for m in r.model],alpha=0.85,height=0.6)
+--- review_runde1/phase2b/fig_mae_horizont.py
++++ scripts/fig_mae_horizont.py
+@@ -1,3 +1,5 @@
++# [Repositorium v1.1.0] Inhalt unveraendert aus review_runde1/phase2b/fig_mae_horizont.py;
++# angepasst sind nur Pfade (scripts/paths.py). Diff: docs/CODE_CHANGES.diff
+ """Abb. S3 (Zusatzmaterial): mittlerer absoluter Fehler nach Prognosestunde.
+ Daten: review_runde1/phase2a/tables/mae_by_horizon.csv (aus frozen_2026-10-14, n = 129).
+ Aufruf: python3 review_runde1/phase2b/fig_mae_horizont.py
+@@ -8,9 +10,11 @@
+ matplotlib.use("Agg")
+ import matplotlib.pyplot as plt
+ 
+-root = Path(__file__).resolve().parents[1]
+-src = root / "phase2a" / "tables" / "mae_by_horizon.csv"
+-out = Path(__file__).resolve().parent / "figures" / "abb_s3_mae_horizont"
++import sys; sys.path.insert(0, str(Path(__file__).resolve().parent))
++from paths import TABLES, FIGURES  # noqa: E402
++src = TABLES / "mae_by_horizon.csv"
++FIGURES.mkdir(parents=True, exist_ok=True)
++out = FIGURES / "abb_s3_mae_horizont"
+ 
+ rows = list(csv.DictReader(open(src)))
+ h = [int(r["h"]) for r in rows]
+--- review_runde1/phase2b/meteoschweiz_check.py
++++ scripts/meteoschweiz_check.py
+@@ -1,3 +1,5 @@
++# [Repositorium v1.1.0] Inhalt unveraendert aus review_runde1/phase2b/meteoschweiz_check.py;
++# angepasst sind nur Pfade (scripts/paths.py). Diff: docs/CODE_CHANGES.diff
+ """Reproduzierbare Berechnung der Lufttemperatur-Vergleichswerte (Kap. 2.1, Zusatzmaterial).
+ 
+ Quelle: MeteoSchweiz Open Government Data, automatisches Messnetz (ogd-smn), Station BER
+@@ -17,7 +19,8 @@
+ import csv
+ from collections import defaultdict
+ 
+-Q = Path(__file__).resolve().parent / "literatur" / "quellen"
++import sys; sys.path.insert(0, str(Path(__file__).resolve().parent))
++from paths import METEOSCHWEIZ as Q  # noqa: E402
+ 
+ 
+ def read(fn, param):

@@ -1,0 +1,15 @@
+{
+  "title": "Zero-Shot River Temperature Forecast – Reproduction Repository (v1.1.0)",
+  "version": "v1.1.0",
+  "upload_type": "software",
+  "creators": [
+    {"name": "Neugebauer, Florian"}
+  ],
+  "description": "<p>Code, eigene Prognosen und abgeleitete Ergebnisse zum Beitrag „Wassertemperaturprognosen für die Aare bei Bern mit einem vortrainierten Zeitreihenmodell: Vergleich und Kombination mit Aare-Oraku“ (Hydrologie und Wasserbewirtschaftung, eingereicht). Version 1.1.0 enthält die korrigierte Auswertung mit 129 Prognosefällen (Zeitstempelkorrektur der Wettervorhersagen, eingefrorener Datenstand vom 14.10.2026) und ersetzt für die überarbeitete Fassung des Beitrags die Version 1.0.0 (Ersteinreichung, 128 Fälle), die unverändert zugänglich bleibt.</p><p><b>Lizenzen:</b> Code MIT; eigene Ergebnisse CC BY 4.0; mitgelieferte Open-Meteo- und MeteoSchweiz-Daten CC BY 4.0 der jeweiligen Anbieter; OpenStreetMap-Geometrie ODbL 1.0 (siehe LICENSE-DATA). Messwerte des BAFU (bezogen über aare.guru) und Prognosen von Aare-Oraku sind nicht enthalten; sie werden per Skript aus Version 1.0.0 oder von den Schnittstellen beschafft und per SHA-256 geprüft (docs/DATENRECHTE.md).</p><p><b>Hinweis zu Version 1.0.0:</b> Version 1.0.0 enthält Rohdaten Dritter (Schnittstellenantworten von aare.guru und Aare-Oraku), für deren Weiterveröffentlichung keine abschließende Rechteklärung vorliegt. Die dortigen Angaben MIT bzw. CC BY 4.0 gelten nur für die eigenen Inhalte des Autors. An den Daten Dritter werden keine Nutzungsrechte eingeräumt; es gelten allein die Bedingungen der Anbieter.</p>",
+  "license": "MIT",
+  "keywords": ["Wassertemperatur", "Aare", "Prognose", "TiRex-2", "Aare-Oraku", "Foundation Model", "Reproduzierbarkeit"],
+  "language": "deu",
+  "related_identifiers": [
+    {"identifier": "10.5281/zenodo.21850779", "relation": "isNewVersionOf", "scheme": "doi"}
+  ]
+}

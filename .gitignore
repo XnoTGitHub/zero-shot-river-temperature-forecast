@@ -1,6 +1,15 @@
+# Umgebungen
+.venv*/
 __pycache__/
 *.pyc
-.venv/
-venv*/
 .DS_Store
-*.log
+# Eingangsdaten Dritter: werden per scripts/fetch_inputs.py lokal bereitgestellt,
+# aber nicht weiterveroeffentlicht (docs/DATENRECHTE.md)
+data/cache/aare_bern_*.json
+data/cache/aare_thun_*.json
+data/cache/aare_temperature_hourly.csv
+data/cache/oraku_*.json
+data/cache_oraku_meta/
+data/cache_new/
+# Reproduzierte Ergebnisse (Referenz liegt in results_reference/)
+results/

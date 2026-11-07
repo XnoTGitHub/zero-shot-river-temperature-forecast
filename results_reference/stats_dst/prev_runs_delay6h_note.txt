@@ -1,0 +1,3 @@
+PREVIOUS-RUNS-vs-HISTORICAL-FORECAST VERGLEICH  (dieselben 128 Fenster)
+========================================================================
+Hinweis: all_seasons_summary.csv (Original) nicht gefunden.

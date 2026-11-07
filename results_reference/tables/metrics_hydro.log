@@ -1,0 +1,108 @@
+Datenbasis: 129 Fenster, 6192 Stundenwerte, 2025-11-04 00:00:00+01:00 .. 2026-07-31 23:00:00+02:00
+
+[0] Konsistenzpruefung: MAE aus Stundendaten vs. eingefrorene Fenster-MAE
+  Oraku  max |Δ| = 2.22e-16
+  T      max |Δ| = 1.51e-07
+  A      max |Δ| = 1.44e-07
+  R      max |Δ| = 1.04e-07
+  AO     max |Δ| = 6.11e-16
+  RO     max |Δ| = 3.89e-16
+  -> identisch bis auf CSV-Rundung der float32-Prognosen (max 1.5e-07 degC) [OK]
+
+[1] Tab. I – Guetemasse je Modell und Saison (Stundenwerte) + gepaarte Fensterdifferenzen vs. Oraku
+season   ALLE  Fruehling  Herbst  Sommer  Winter
+model                                           
+AO      0.338      0.474   0.183   0.428   0.184
+Oraku   0.403      0.571   0.217   0.496   0.222
+T       0.349      0.457   0.220   0.462   0.202
+   season comparison   n   delta   ci_lo   ci_hi  p_wilcoxon
+   Winter  T - Oraku  42 -0.0208 -0.0663  0.0358      0.0250
+   Winter AO - Oraku  42 -0.0389 -0.0597 -0.0150      0.0001
+Fruehling  T - Oraku  45 -0.1142 -0.1700 -0.0530      0.0009
+Fruehling AO - Oraku  45 -0.0976 -0.1353 -0.0585      0.0000
+   Sommer  T - Oraku  28 -0.0336 -0.1105  0.0397      0.4380
+   Sommer AO - Oraku  28 -0.0678 -0.1184 -0.0273      0.0136
+   Herbst  T - Oraku  14  0.0033 -0.0633  0.0783      0.9515
+   Herbst AO - Oraku  14 -0.0337 -0.0747  0.0105      0.1040
+     ALLE  T - Oraku 129 -0.0536 -0.0934 -0.0128      0.0006
+     ALLE AO - Oraku 129 -0.0651 -0.0894 -0.0407      0.0000
+
+[2] Tab. II – Tagesmaxima/-minima (lokale Kalendertage, nur vollstaendige Tage >= 23 h)
+  Fenster-Tage gesamt 259, vollstaendig 258, unvollstaendig (ausgeschlossen) 1: 2026-03-28/2026-03-30 (1 h)
+  DST-Beginn 29.03.2026: {(Timestamp('2026-03-28 00:00:00'), datetime.date(2026, 3, 29)): 23} -> 23-h-Tag korrekt als ein Kalendertag gefuehrt
+   season model  n_days  Tmax_bias  Tmax_MAE  Tmin_bias  Tmin_MAE  toff_abs_mean_h  share_toff_ge2h
+   Winter Oraku      84      0.041     0.246      0.151     0.243            2.988            0.821
+   Winter     T      84      0.010     0.243      0.114     0.213            1.607            0.274
+   Winter    AO      84      0.006     0.218      0.145     0.204            2.036            0.464
+Fruehling Oraku      90     -0.580     0.702      0.076     0.500            2.133            0.733
+Fruehling     T      90     -0.192     0.535     -0.029     0.459            0.900            0.178
+Fruehling    AO      90     -0.416     0.584      0.031     0.453            1.378            0.344
+   Sommer Oraku      56     -0.479     0.556      0.182     0.515            1.500            0.429
+   Sommer     T      56      0.046     0.448      0.183     0.552            1.161            0.214
+   Sommer    AO      56     -0.251     0.422      0.187     0.489            1.321            0.286
+   Herbst Oraku      28      0.086     0.250      0.079     0.200            3.500            0.821
+   Herbst     T      28      0.157     0.242      0.165     0.249            1.500            0.286
+   Herbst    AO      28      0.082     0.193      0.148     0.199            2.000            0.429
+     ALLE Oraku     258     -0.284     0.473      0.124     0.387            2.422            0.705
+     ALLE     T     258     -0.037     0.389      0.085     0.376            1.252            0.229
+     ALLE    AO     258     -0.189     0.387      0.115     0.352            1.647            0.380
+comparison            metric   n   delta   ci_lo   ci_hi  p_wilcoxon  p_sign
+ T - Oraku    Tmax_abs_error 129 -0.0838 -0.1446 -0.0253      0.0076  0.0523
+ T - Oraku         Tmax_bias 129  0.2467  0.1298  0.3698      0.0000  0.0002
+ T - Oraku         Tmin_bias 129 -0.0388 -0.1245  0.0435      0.3686  0.3787
+ T - Oraku abs_time_offset_h 129 -1.1705 -1.4419 -0.8991      0.0000  0.0000
+AO - Oraku    Tmax_abs_error 129 -0.0857 -0.1275 -0.0465      0.0000  0.0001
+AO - Oraku         Tmax_bias 129  0.0946  0.0371  0.1544      0.0000  0.0134
+AO - Oraku         Tmin_bias 129 -0.0089 -0.0541  0.0338      0.8132  0.7249
+AO - Oraku abs_time_offset_h 129 -0.7752 -1.0078 -0.5581      0.0000  0.0000
+
+[3] Tab. III – illustrative Schwellen (20/22 degC, nur Juni/Juli-Fenster) und grosse Fehler  [deskriptiv]
+ threshold_degC model  n_hours  n_obs_above  hit_rate  false_alarm_rate  n_missed  n_false
+           20.0 Oraku     1368          834     0.957             0.047        36       39
+           20.0     T     1368          834     0.972             0.059        23       51
+           20.0    AO     1368          834     0.968             0.049        27       42
+           22.0 Oraku     1368          358     0.701             0.070       107       19
+           22.0     T     1368          358     0.816             0.144        66       49
+           22.0    AO     1368          358     0.771             0.068        82       20
+  grosse Fehler (alle Stunden): Oraku: >0.5 28.1%, >1.0 8.4%, max 2.69; T: >0.5 23.9%, >1.0 6.1%, max 2.90; A: >0.5 23.4%, >1.0 6.5%, max 3.06; R: >0.5 21.8%, >1.0 7.4%, max 4.10; AO: >0.5 22.0%, >1.0 6.0%, max 2.60; RO: >0.5 21.9%, >1.0 6.6%, max 2.63
+
+[4] Tab. IV – Thun-Zwischenprognose (Stufe 1) je Saison
+   season   n  stage1_thun_MAE
+   Winter  42            0.141
+Fruehling  45            0.507
+   Sommer  28            0.574
+   Herbst  14            0.138
+     ALLE 129            0.362
+
+[5] Tab. V – Oraku-Version und Abflussquelle je Zeitraum  [deskriptiv/explorativ]
+        oraku_model  n       from         to  Oraku_MAE  T_MAE  AO_MAE  flow_bafu  flow_persist
+             LR/dev 67 2025-11-04 2026-03-22      0.249  0.214   0.202         37            30
+nowcasting_temp/1.0 25 2026-03-24 2026-05-13      0.612  0.478   0.496         23             2
+nowcasting_temp/1.1  1 2026-05-15 2026-05-15      0.306  0.554   0.307          1             0
+nowcasting_temp/1.2  1 2026-05-17 2026-05-17      0.747  0.159   0.338          1             0
+nowcasting_temp/1.3 35 2026-05-19 2026-07-30      0.542  0.517   0.486         35             0
+
+[6] Z4 – Fehler bei dynamischen vs. ruhigen Fenstern (|Delta T ueber 48 h| > 1,5 degC)  [explorativ]
+ dynamic  n      model     MAE   delta   ci_lo   ci_hi  p_wilcoxon  p_sign  wins
+   False 51      Oraku  0.2433     NaN     NaN     NaN         NaN     NaN   NaN
+   False 51          T  0.2201     NaN     NaN     NaN         NaN     NaN   NaN
+   False 51          A  0.2170     NaN     NaN     NaN         NaN     NaN   NaN
+   False 51          R  0.1972     NaN     NaN     NaN         NaN     NaN   NaN
+   False 51         AO  0.2040     NaN     NaN     NaN         NaN     NaN   NaN
+   False 51         RO  0.1898     NaN     NaN     NaN         NaN     NaN   NaN
+   False 51  T - Oraku -0.0232 -0.0232 -0.0633  0.0238      0.0168  0.0018  37.0
+   False 51 AO - Oraku -0.0393 -0.0393 -0.0606 -0.0147      0.0000  0.0000  41.0
+    True 78      Oraku  0.5074     NaN     NaN     NaN         NaN     NaN   NaN
+    True 78          T  0.4340     NaN     NaN     NaN         NaN     NaN   NaN
+    True 78          A  0.4347     NaN     NaN     NaN         NaN     NaN   NaN
+    True 78          R  0.4678     NaN     NaN     NaN         NaN     NaN   NaN
+    True 78         AO  0.4254     NaN     NaN     NaN         NaN     NaN   NaN
+    True 78         RO  0.4470     NaN     NaN     NaN         NaN     NaN   NaN
+    True 78  T - Oraku -0.0734 -0.0734 -0.1284 -0.0164      0.0065  0.0043  52.0
+    True 78 AO - Oraku -0.0820 -0.0820 -0.1155 -0.0473      0.0000  0.0000  61.0
+
+[7] Fehler nach Tagesstunde (fuer Abb. F) und nach Prognosestunde (Abb. G)
+  gespeichert: bias_by_hour_season.csv, mae_by_horizon.csv
+
+[8] Beispielfenster je Saison (Median nach AO-MAE) und Kontrastfenster
+  Median-Fenster: {'Winter': '2026-01-21', 'Fruehling': '2026-03-18', 'Sommer': '2026-07-24', 'Herbst': '2025-11-18'}; groesster Oraku-Nachteil: 2026-04-03; Oraku besser (Median von 40 Fenstern): 2025-11-24

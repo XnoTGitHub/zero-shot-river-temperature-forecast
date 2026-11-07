@@ -1,0 +1,24 @@
+# Umgebung B – Statistik, Tabellen, Abbildungen, Pruefskripte (alle uebrigen Skripte)
+# Exakt die Versionen der Auswertung vom 14.10.2026 (miniforge3, Python 3.12.11).
+# Installation:
+#   python3.12 -m venv .venv-analysis && .venv-analysis/bin/pip install -r requirements-analysis.txt
+numpy==2.1.3
+pandas==2.3.2
+scipy==1.16.2
+matplotlib==3.10.6
+contourpy==1.3.3
+cycler==0.12.1
+fonttools==4.59.2
+kiwisolver==1.4.9
+packaging==25.0
+pyparsing==3.2.3
+python-dateutil==2.9.0.post0
+pillow==11.3.0
+pytz==2025.2
+tzdata==2025.2
+six==1.17.0
+requests==2.32.4
+urllib3==2.5.0
+idna==3.10
+certifi==2025.7.14
+charset-normalizer==3.5.1

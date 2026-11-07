@@ -1,0 +1,151 @@
+==============================================================================
+1  Stabilitaet 'Zeitpunkt des Tagesmaximums'
+==============================================================================
+vollstaendige Tage: 258; Tagesamplitude Messung: Median 1.51 degC, < 0,5 degC: 26 Tage, < 1,0: 85
+Messung: Maximum nahe Mitternacht (h<=1 oder >=22): 18 Tage (7%); Mehrfachmaxima (>=2 Stunden innerhalb 0,05 degC des Maximums): 245 Tage
+Anteil |gewoehnlich| != |zirkulaer|: Oraku: 6.6%, T: 5.8%, A: 5.0%, AO: 5.4%
+
+Mittlerer |Zeitversatz| [h], gewoehnlich / zirkulaer, nach Saison:
+  Winter    n= 84 Oraku: 3.87/2.99  T: 2.23/1.61  AO: 2.77/2.04
+  Fruehling n= 90 Oraku: 2.49/2.13  T: 1.14/0.90  AO: 1.60/1.38
+  Sommer    n= 56 Oraku: 1.79/1.50  T: 1.48/1.16  AO: 1.61/1.32
+  Herbst    n= 28 Oraku: 4.36/3.50  T: 2.21/1.50  AO: 2.79/2.00
+  ALLE      n=258 Oraku: 2.99/2.42  T: 1.69/1.25  AO: 2.11/1.65
+
+Sensitivitaet: gepaarte Fensterdifferenz des mittleren |zirkulaeren Zeitversatzes| (T - Oraku, AO - Oraku) nach Mindestamplitude und Saison
+  Winter:
+    amp>=0.0 T - Oraku  n_win= 42 Δ=-1.38 h CI=[-1.74;-1.07] p=7.63e-07  -> nominell signifikant (CI und Wilcoxon)
+    amp>=0.0 AO - Oraku n_win= 42 Δ=-0.95 h CI=[-1.35;-0.67] p=3.41e-07  -> nominell signifikant (CI und Wilcoxon)
+    amp>=0.5 T - Oraku  n_win= 35 Δ=-1.53 h CI=[-1.96;-1.19] p=9.89e-07  -> nominell signifikant (CI und Wilcoxon)
+    amp>=0.5 AO - Oraku n_win= 35 Δ=-1.04 h CI=[-1.56;-0.71] p=6.75e-07  -> nominell signifikant (CI und Wilcoxon)
+    amp>=1.0 T - Oraku  n_win= 19 Δ=-1.61 h CI=[-2.11;-1.24] p=0.000368  -> nominell signifikant (CI und Wilcoxon)
+    amp>=1.0 AO - Oraku n_win= 19 Δ=-1.05 h CI=[-1.58;-0.71] p=0.00029  -> nominell signifikant (CI und Wilcoxon)
+    amp>=1.5 T - Oraku  n_win=  6 Δ=-1.58 h CI=[-1.75;-1.42] p=0.0312  -> nominell signifikant (CI und Wilcoxon)
+    amp>=1.5 AO - Oraku n_win=  6 Δ=-0.83 h CI=[-1.00;-0.67] p=0.0625  -> nur CI (Wilcoxon n.s.)
+  Fruehling:
+    amp>=0.0 T - Oraku  n_win= 45 Δ=-1.23 h CI=[-1.59;-0.86] p=1.86e-06  -> nominell signifikant (CI und Wilcoxon)
+    amp>=0.0 AO - Oraku n_win= 45 Δ=-0.76 h CI=[-1.00;-0.51] p=8.46e-08  -> nominell signifikant (CI und Wilcoxon)
+    amp>=0.5 T - Oraku  n_win= 45 Δ=-1.23 h CI=[-1.59;-0.86] p=1.86e-06  -> nominell signifikant (CI und Wilcoxon)
+    amp>=0.5 AO - Oraku n_win= 45 Δ=-0.76 h CI=[-1.00;-0.51] p=8.46e-08  -> nominell signifikant (CI und Wilcoxon)
+    amp>=1.0 T - Oraku  n_win= 44 Δ=-1.31 h CI=[-1.65;-0.94] p=1.51e-06  -> nominell signifikant (CI und Wilcoxon)
+    amp>=1.0 AO - Oraku n_win= 44 Δ=-0.83 h CI=[-1.08;-0.58] p=5.47e-08  -> nominell signifikant (CI und Wilcoxon)
+    amp>=1.5 T - Oraku  n_win= 43 Δ=-1.36 h CI=[-1.71;-0.99] p=1.74e-06  -> nominell signifikant (CI und Wilcoxon)
+    amp>=1.5 AO - Oraku n_win= 43 Δ=-0.85 h CI=[-1.13;-0.59] p=6.52e-08  -> nominell signifikant (CI und Wilcoxon)
+  Sommer:
+    amp>=0.0 T - Oraku  n_win= 28 Δ=-0.34 h CI=[-0.62;-0.05] p=0.0149  -> nominell signifikant (CI und Wilcoxon)
+    amp>=0.0 AO - Oraku n_win= 28 Δ=-0.18 h CI=[-0.41;+0.07] p=0.0655  -> nicht gesichert
+    amp>=0.5 T - Oraku  n_win= 28 Δ=-0.34 h CI=[-0.62;-0.05] p=0.0149  -> nominell signifikant (CI und Wilcoxon)
+    amp>=0.5 AO - Oraku n_win= 28 Δ=-0.18 h CI=[-0.41;+0.07] p=0.0655  -> nicht gesichert
+    amp>=1.0 T - Oraku  n_win= 28 Δ=-0.41 h CI=[-0.73;-0.09] p=0.00676  -> nominell signifikant (CI und Wilcoxon)
+    amp>=1.0 AO - Oraku n_win= 28 Δ=-0.25 h CI=[-0.57;+0.05] p=0.0383  -> nur Wilcoxon (CI des Mittels schliesst 0 ein)
+    amp>=1.5 T - Oraku  n_win= 27 Δ=-0.37 h CI=[-0.76;+0.00] p=0.0302  -> nur Wilcoxon (CI des Mittels schliesst 0 ein)
+    amp>=1.5 AO - Oraku n_win= 27 Δ=-0.20 h CI=[-0.50;+0.09] p=0.0848  -> nicht gesichert
+  Herbst:
+    amp>=0.0 T - Oraku  n_win= 14 Δ=-2.00 h CI=[-2.50;-1.57] p=0.00877  -> nominell signifikant (CI und Wilcoxon)
+    amp>=0.0 AO - Oraku n_win= 14 Δ=-1.50 h CI=[-2.11;-0.86] p=0.0125  -> nominell signifikant (CI und Wilcoxon)
+    amp>=0.5 T - Oraku  n_win= 14 Δ=-2.25 h CI=[-3.04;-1.61] p=0.00728  -> nominell signifikant (CI und Wilcoxon)
+    amp>=0.5 AO - Oraku n_win= 14 Δ=-1.71 h CI=[-2.82;-0.82] p=0.0121  -> nominell signifikant (CI und Wilcoxon)
+    amp>=1.0 T - Oraku  n_win=  5 Δ=-1.80 h CI=[+nan;+nan] p=nan  -> n zu klein
+    amp>=1.0 AO - Oraku n_win=  5 Δ=-0.70 h CI=[+nan;+nan] p=nan  -> n zu klein
+    amp>=1.5 T - Oraku  n_win=  0 Δ=+nan h CI=[+nan;+nan] p=nan  -> n zu klein
+    amp>=1.5 AO - Oraku n_win=  0 Δ=+nan h CI=[+nan;+nan] p=nan  -> n zu klein
+  ALLE:
+    amp>=0.0 T - Oraku  n_win=129 Δ=-1.17 h CI=[-1.44;-0.90] p=4.41e-15  -> nominell signifikant (CI und Wilcoxon)
+    amp>=0.0 AO - Oraku n_win=129 Δ=-0.78 h CI=[-1.01;-0.56] p=3.64e-15  -> nominell signifikant (CI und Wilcoxon)
+    amp>=0.5 T - Oraku  n_win=122 Δ=-1.23 h CI=[-1.55;-0.92] p=4.24e-15  -> nominell signifikant (CI und Wilcoxon)
+    amp>=0.5 AO - Oraku n_win=122 Δ=-0.82 h CI=[-1.11;-0.57] p=4.51e-15  -> nominell signifikant (CI und Wilcoxon)
+    amp>=1.0 T - Oraku  n_win= 96 Δ=-1.13 h CI=[-1.43;-0.81] p=2.44e-12  -> nominell signifikant (CI und Wilcoxon)
+    amp>=1.0 AO - Oraku n_win= 96 Δ=-0.70 h CI=[-0.93;-0.47] p=1.41e-12  -> nominell signifikant (CI und Wilcoxon)
+    amp>=1.5 T - Oraku  n_win= 76 Δ=-1.03 h CI=[-1.38;-0.66] p=2.59e-09  -> nominell signifikant (CI und Wilcoxon)
+    amp>=1.5 AO - Oraku n_win= 76 Δ=-0.62 h CI=[-0.86;-0.38] p=1.19e-09  -> nominell signifikant (CI und Wilcoxon)
+
+==============================================================================
+2  Oraku-Nachmittagsbias nach Modellversion (deskriptiv; Version x Saison konfundiert)
+==============================================================================
+Mittlerer Fehler 12-17 Uhr (Prognose - Messung) je Version und Saison:
+            version    season  n_windows  afternoon_bias_Oraku  afternoon_bias_T  afternoon_bias_AO
+             LR/dev Fruehling         11                -0.629            -0.061             -0.346
+nowcasting_temp/1.0 Fruehling         25                -0.680            -0.052             -0.365
+nowcasting_temp/1.1 Fruehling          1                -0.359             0.848              0.275
+nowcasting_temp/1.2 Fruehling          1                -1.120             0.204             -0.478
+nowcasting_temp/1.3 Fruehling          7                -1.060            -0.695             -0.900
+             LR/dev    Herbst         14                -0.044             0.169              0.055
+nowcasting_temp/1.3    Sommer         28                -0.462             0.115             -0.201
+             LR/dev    Winter         42                -0.087             0.035             -0.026
+
+Innerhalb des Fruehlings (einzige Saison mit mehreren Versionen und n >= 7):
+            version    season  n_windows  afternoon_bias_Oraku  afternoon_bias_T  afternoon_bias_AO
+             LR/dev Fruehling         11                -0.629            -0.061             -0.346
+nowcasting_temp/1.0 Fruehling         25                -0.680            -0.052             -0.365
+nowcasting_temp/1.1 Fruehling          1                -0.359             0.848              0.275
+nowcasting_temp/1.2 Fruehling          1                -1.120             0.204             -0.478
+nowcasting_temp/1.3 Fruehling          7                -1.060            -0.695             -0.900
+Lesart: Der Nachmittagsbias von Oraku tritt bei LR/dev (Maerz), 1.0 (April/Mai) und 1.3 (Ende Mai) auf; die Groesse variiert mit Version UND Jahreszeit; eine Trennung ist mit diesen Daten nicht moeglich.
+
+Nach Version und Monat (zeigt Saisoneffekt innerhalb LR/dev und innerhalb 1.3):
+            version  month  n_windows  bias_Oraku  bias_T
+             LR/dev      1         15      -0.130   0.054
+             LR/dev      2         14      -0.193  -0.095
+             LR/dev      3         12      -0.604  -0.059
+             LR/dev     11         14      -0.050   0.165
+             LR/dev     12         15       0.057   0.142
+nowcasting_temp/1.0      3          4      -0.294   0.294
+nowcasting_temp/1.0      4         15      -0.889  -0.176
+nowcasting_temp/1.0      5          6      -0.416   0.025
+nowcasting_temp/1.1      5          1      -0.359   0.848
+nowcasting_temp/1.2      5          1      -1.120   0.204
+nowcasting_temp/1.3      5          7      -1.059  -0.713
+nowcasting_temp/1.3      6         14      -0.536   0.013
+nowcasting_temp/1.3      7         16      -0.420   0.181
+
+==============================================================================
+3  Schwellenkennzahlen mit eindeutigen Definitionen (illustrativ, Juni/Juli)
+==============================================================================
+ threshold_degC model  TP  FP  FN  TN  POD_hit_rate  FAR_false_alarm_ratio  FPR_false_positive_rate  bias_score
+           20.0 Oraku 798  39  36 495         0.957                  0.047                    0.073       1.004
+           20.0     T 811  51  23 483         0.972                  0.059                    0.096       1.034
+           20.0     A 812  46  22 488         0.974                  0.054                    0.086       1.029
+           20.0    AO 807  42  27 492         0.968                  0.049                    0.079       1.018
+           22.0 Oraku 251  19 107 991         0.701                  0.070                    0.019       0.754
+           22.0     T 292  49  66 961         0.816                  0.144                    0.049       0.953
+           22.0     A 293  42  65 968         0.818                  0.125                    0.042       0.936
+           22.0    AO 276  20  82 990         0.771                  0.068                    0.020       0.827
+POD = TP/(TP+FN); FAR = FP/(TP+FP) (bisher 'Fehlalarmrate' genannt -> umbenannt in Fehlalarmanteil); FPR = FP/(FP+TN); Bias-Score = (TP+FP)/(TP+FN).
+
+==============================================================================
+4  Einstufung der saisonalen/ergaenzenden Vergleiche (Tab. I/II)
+==============================================================================
+Gesamtzeitraum (Primaertests, Holm-korrigiert -> 'gesichert'): nur Q1 T-Oraku und Q3a AO-Oraku ueber alle 129 Fenster.
+Alle saisonalen Vergleiche und Tagesextrema-Vergleiche: nominell, ohne Multiplizitaetskorrektur -> hoechstens 'nominell signifikant'.
+   season comparison  delta  ci_lo  ci_hi  p_wilcoxon                                    einstufung
+   Winter  T - Oraku -0.021 -0.066  0.036       0.025 nur Wilcoxon (CI des Mittels schliesst 0 ein)
+   Winter AO - Oraku -0.039 -0.060 -0.015       0.000        nominell signifikant (CI und Wilcoxon)
+Fruehling  T - Oraku -0.114 -0.170 -0.053       0.001        nominell signifikant (CI und Wilcoxon)
+Fruehling AO - Oraku -0.098 -0.135 -0.059       0.000        nominell signifikant (CI und Wilcoxon)
+   Sommer  T - Oraku -0.034 -0.111  0.040       0.438                               nicht gesichert
+   Sommer AO - Oraku -0.068 -0.118 -0.027       0.014        nominell signifikant (CI und Wilcoxon)
+   Herbst  T - Oraku  0.003 -0.063  0.078       0.952                               nicht gesichert
+   Herbst AO - Oraku -0.034 -0.075  0.011       0.104                               nicht gesichert
+     ALLE  T - Oraku -0.054 -0.093 -0.013       0.001        nominell signifikant (CI und Wilcoxon)
+     ALLE AO - Oraku -0.065 -0.089 -0.041       0.000        nominell signifikant (CI und Wilcoxon)
+   season comparison            metric  delta  ci_lo  ci_hi  p_wilcoxon                             einstufung
+   Winter  T - Oraku    Tmax_abs_error -0.003 -0.087  0.082       0.544                        nicht gesichert
+   Winter  T - Oraku abs_time_offset_h -1.381 -1.738 -1.071       0.000 nominell signifikant (CI und Wilcoxon)
+   Winter AO - Oraku    Tmax_abs_error -0.028 -0.075  0.022       0.054                        nicht gesichert
+   Winter AO - Oraku abs_time_offset_h -0.952 -1.345 -0.667       0.000 nominell signifikant (CI und Wilcoxon)
+Fruehling  T - Oraku    Tmax_abs_error -0.167 -0.260 -0.075       0.018 nominell signifikant (CI und Wilcoxon)
+Fruehling  T - Oraku abs_time_offset_h -1.233 -1.589 -0.856       0.000 nominell signifikant (CI und Wilcoxon)
+Fruehling AO - Oraku    Tmax_abs_error -0.118 -0.188 -0.053       0.001 nominell signifikant (CI und Wilcoxon)
+Fruehling AO - Oraku abs_time_offset_h -0.756 -1.000 -0.511       0.000 nominell signifikant (CI und Wilcoxon)
+   Sommer  T - Oraku    Tmax_abs_error -0.109 -0.214  0.019       0.077                        nicht gesichert
+   Sommer  T - Oraku abs_time_offset_h -0.339 -0.625 -0.054       0.015 nominell signifikant (CI und Wilcoxon)
+   Sommer AO - Oraku    Tmax_abs_error -0.134 -0.213 -0.060       0.009 nominell signifikant (CI und Wilcoxon)
+   Sommer AO - Oraku abs_time_offset_h -0.179 -0.411  0.071       0.066                        nicht gesichert
+   Herbst  T - Oraku    Tmax_abs_error -0.009 -0.075  0.073       0.903                        nicht gesichert
+   Herbst  T - Oraku abs_time_offset_h -2.000 -2.500 -1.571       0.009 nominell signifikant (CI und Wilcoxon)
+   Herbst AO - Oraku    Tmax_abs_error -0.057 -0.094 -0.011       0.049 nominell signifikant (CI und Wilcoxon)
+   Herbst AO - Oraku abs_time_offset_h -1.500 -2.107 -0.857       0.013 nominell signifikant (CI und Wilcoxon)
+     ALLE  T - Oraku    Tmax_abs_error -0.084 -0.145 -0.025       0.008 nominell signifikant (CI und Wilcoxon)
+     ALLE  T - Oraku abs_time_offset_h -1.171 -1.442 -0.899       0.000 nominell signifikant (CI und Wilcoxon)
+     ALLE AO - Oraku    Tmax_abs_error -0.086 -0.128 -0.046       0.000 nominell signifikant (CI und Wilcoxon)
+     ALLE AO - Oraku abs_time_offset_h -0.775 -1.008 -0.558       0.000 nominell signifikant (CI und Wilcoxon)

@@ -1,0 +1,4 @@
+Abb3 Winter t0=2026-01-21: Oraku 0.2152, T 0.1402, AO 0.1701
+Abb3 Fruehling t0=2026-03-18: Oraku 0.5522, T 0.2052, AO 0.3689
+Abb3 Sommer t0=2026-07-24: Oraku 0.5162, T 0.2971, AO 0.3811
+Abb3 Herbst t0=2025-11-18: Oraku 0.1652, T 0.2648, AO 0.1835

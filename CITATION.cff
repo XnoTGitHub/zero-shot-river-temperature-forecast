@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "Bitte zitieren Sie dieses Repositorium in der angegebenen Version."
+title: "Zero-Shot River Temperature Forecast – Reproduction Repository"
+version: "v1.1.0"
+authors:
+  - family-names: "Neugebauer"
+    given-names: "Florian"
+license: MIT
+repository-code: "https://github.com/XnoTGitHub/zero-shot-river-temperature-forecast"
+abstract: >-
+  Code, eigene Prognosen und abgeleitete Ergebnisse zur retrospektiven
+  Prognoseevaluation der Wassertemperatur der Aare bei Bern (129 Fälle,
+  November 2025 bis Juli 2026): TiRex-2 im Vergleich und in Kombination mit
+  Aare-Oraku. Version 1.1.0 enthält die korrigierte Auswertung (Zeitstempelkorrektur);
+  Version 1.0.0 die Auswertung der Ersteinreichung (128 Fälle).
+keywords:
+  - Wassertemperatur
+  - Aare
+  - Prognose
+  - TiRex-2
+  - Zeitreihen-Foundation-Model
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.21850778"
+    description: "Concept-DOI (alle Versionen)"
+  - type: doi
+    value: "10.5281/zenodo.21850779"
+    description: "Version 1.0.0 (Ersteinreichung, 128 Fälle)"

@@ -1,22 +1,36 @@
-Data licence: Creative Commons Attribution 4.0 International (CC BY 4.0)
-=======================================================================
+Lizenzen der Daten in diesem Repositorium (v1.1.0)
+=================================================
 
-The datasets in this repository (contents of `data/` and derived CSV/PNG
-outputs produced by the scripts in `src/` and `figures/`) are licensed under
-the Creative Commons Attribution 4.0 International licence.
+Dieses Repositorium enthält Inhalte mit unterschiedlichen Lizenzen. Eine einheitliche
+Datenlizenz für alle Dateien gibt es nicht. Begründung und Belege: docs/DATENRECHTE.md.
 
-Full text: https://creativecommons.org/licenses/by/4.0/legalcode
-Summary:   https://creativecommons.org/licenses/by/4.0/
+1. Eigene Ergebnisse des Autors – CC BY 4.0
+   Verzeichnis results_reference/ (TiRex-2-Prognosen, Fehlerkennzahlen, Tests, Tabellen,
+   Abbildungen) sowie data/MANIFEST_inputs.csv.
+   © 2026 Florian Neugebauer. Lizenz: Creative Commons Attribution 4.0 International
+   https://creativecommons.org/licenses/by/4.0/legalcode
+   Zu zitieren als: Neugebauer, F. (2026): Zero-Shot River Temperature Forecast –
+   Reproduction Repository, Version 1.1.0. Zenodo. Alle Versionen: DOI 10.5281/zenodo.21850778
 
-You are free to share and adapt the data, provided you give appropriate
-credit to the original source and to this repository.
+2. Open-Meteo-Wettervorhersagen – CC BY 4.0 (Open-Meteo)
+   data/cache/meteo_prevruns_*.json, data/cache/meteo_hist_*.json, data/cache/wind_thun_*.json
+   Unveränderte Antworten der Open-Meteo-Archivdienste (Abruf 4.8.2026).
+   „Weather data by Open-Meteo.com“, https://open-meteo.com/en/licence
+   Atmosphärische Vorhersagen: Deutscher Wetterdienst (DWD), Modell ICON.
 
-Attribution of upstream sources
--------------------------------
-- Aareguru API (Aare water temperature and discharge) — CC BY 4.0,
-  https://aareguru.existenz.ch/
-- Open-Meteo Previous Runs API and Historical-Forecast API (archived
-  operational weather forecasts) — CC BY 4.0,
-  https://open-meteo.com/
-- Aare-Oraku API (BAFU discharge forecast, redistributed) — public,
-  https://aare-oraku.konzept.space/
+3. MeteoSchweiz-Messdaten – CC BY 4.0 (MeteoSchweiz)
+   data/meteoschweiz/ogd-smn_*.csv, unverändert (Abruf 14.10.2026). „Quelle: MeteoSchweiz“
+   https://opendatadocs.meteoswiss.ch/general/terms-of-use
+
+4. OpenStreetMap-Geometrie – ODbL 1.0
+   data/osm/nominatim_*.json, unverändert (Abruf Oktober 2026).
+   © OpenStreetMap-Mitwirkende, https://www.openstreetmap.org/copyright
+
+5. Nicht enthalten (Rechte Dritter, Weitergabe nicht geregelt)
+   Messwerte des BAFU, bezogen über die Schnittstelle von aare.guru, sowie Prognosen und
+   die BAFU-Abflussvorhersage, bezogen über die Schnittstelle von Aare-Oraku. Sie werden
+   mit scripts/fetch_inputs.py aus der Version 1.0.0 oder von den Schnittstellen beschafft
+   und per SHA-256 (data/MANIFEST_inputs.csv) geprüft. Für diese Daten gelten allein die
+   Bedingungen der Anbieter (docs/DATENRECHTE.md); sie stehen nicht unter CC BY.
+
+Der Programmcode steht unter der MIT-Lizenz (LICENSE-CODE).
